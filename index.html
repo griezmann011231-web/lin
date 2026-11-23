@@ -10,7 +10,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.58 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",sans-serif}
 main{max-width:1220px;margin:auto;padding:26px 24px 32px}
-header,.card,.summary{border-radius:12px}
+header,.card,.summary,.channel,.case{border-radius:12px}
 header{background:#102b42;color:#f1f7fb;padding:25px 29px}
 header .heading{display:flex;justify-content:space-between;align-items:end;gap:12px}
 h1{font-size:clamp(28px,4vw,43px);line-height:1.16;letter-spacing:.02em;margin:0}
@@ -52,24 +52,52 @@ details summary{cursor:pointer;font-weight:650}
 .notice p{margin:3px 0}
 .disclaimer{border-top:1px solid #cfdce5;padding-top:8px;margin-top:9px}
 a{color:#215d80}
+.channel,.case{background:#fff;border:1px solid var(--border);padding:16px}
+.channel{margin-bottom:14px}
+.channel-heading{display:flex;justify-content:space-between;align-items:center;gap:8px 14px;flex-wrap:wrap}
+.channel-heading h2{font-size:20px;line-height:1.25;margin:0}
+.channel-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.strategy{border-top:2px solid #318b89;background:#f3f8f8;border-radius:0 0 7px 7px;padding:9px 11px}
+.strategy:nth-child(2){border-color:#456b96;background:#f1f5f9}
+.strategy h3{font-size:16px;margin:0 0 6px}
+.strategy dl{margin:0}
+.strategy dl div{display:grid;grid-template-columns:62px 1fr;gap:7px;margin:4px 0}
+.strategy dt{font-size:12px;font-weight:650;color:#3d586c}
+.strategy dd{font-size:13px;margin:0}
+.channel button{cursor:pointer;padding:6px 10px;border:1px solid #b1c9d9;border-radius:6px;background:#fff;color:#164c70;font:inherit;font-size:12px;font-weight:650}
+.channel button:hover{background:#eff5fa}
+.channel button:focus-visible,.case summary:focus-visible{outline:2px solid #245e91;outline-offset:3px}
+.copy-status{font-size:12px;color:var(--teal);margin:6px 0 0}
+.copy-status:empty{display:none}
+.copy-text{width:100%;margin:6px 0 0;padding:8px;border:1px solid var(--border);border-radius:6px;resize:vertical;font:inherit}
+.case{margin-top:14px;color:var(--ink)}
+.case summary{font-size:16px;font-weight:700}
+.case .stats{margin:10px 0}
+.case p{margin:7px 0}
+.case-questions{margin:8px 0 0}
+.case-questions dt{font-weight:650;margin-top:7px}
+.case-questions dd{margin:2px 0 0;color:var(--muted)}
 @media(max-width:750px){
   main{padding:12px 11px 20px}
   header{padding:18px 15px}
   header .heading{align-items:start;flex-direction:column}
   header .dates{gap:4px 16px}
-  .grid{grid-template-columns:minmax(0,1fr)}
+  .grid,.channel-grid{grid-template-columns:minmax(0,1fr)}
   .overview{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:10px 0}
   .overview a{padding:7px 8px;font-size:12px}
-  .card,.summary{padding:13px 10px}
+  .card,.summary,.channel,.case{padding:13px 10px}
   .stats dd{font-size:13px}
 }
 @media print{
   @page{size:A3 portrait;margin:10mm}
   body{background:white;print-color-adjust:exact;-webkit-print-color-adjust:exact}
-  main{max-width:none;padding:0;zoom:.73}
+  main{max-width:none;padding:0;zoom:.70}
+  header{padding:17px 20px}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .channel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .overview{grid-template-columns:repeat(4,minmax(0,1fr))}
-  .card,.summary{break-inside:avoid}
+  .card,.summary,.channel{break-inside:avoid}
+  #copy-channel,.copy-status,.copy-text,.case{display:none}
   .method{break-inside:avoid}
 }
 </style>
@@ -104,6 +132,38 @@ a{color:#215d80}
 <p>个股历史库尚未初始化，本期使用申万一级行业备用口径。</p>
 </div>
 
+<section class="channel" aria-labelledby="channel-title">
+  <div class="channel-heading">
+    <h2 id="channel-title">对指增和市场中性分别意味着什么</h2>
+    <button id="copy-channel" type="button">复制渠道摘要</button>
+  </div>
+  <p id="copy-status" class="copy-status" role="status"></p>
+  <textarea id="channel-text" class="copy-text" aria-label="渠道摘要纯文本" rows="5" readonly hidden>量化环境周报（数据截至 2026-11-23）
+【指数增强】近 20 日中证2000相对沪深300 -10.12%，近 5 日日均成交 14,330.49 亿元（周环比 -13.89%）。若组合相对自身基准超配小盘，风格可能拖累超额，调仓成本还要看持仓股流动性。
+【市场中性】当季年化基差为 IC2703（约 116 天）-11.16%、IM2703（约 116 天）-11.15%。贴水若收敛，新开或展期的空头可能受拖累，已有空头的期间损益还取决于基差如何变化。
+仅供市场观察。产品表现还需结合实际仓位、基准和交易成本。</textarea>
+  <div class="channel-grid">
+    
+    <article class="strategy">
+      <h3>指数增强</h3>
+      <dl>
+        <div><dt>市场事实</dt><dd>近 20 日中证2000相对沪深300 -10.12%，近 5 日日均成交 14,330.49 亿元（周环比 -13.89%）。</dd></div>
+        <div><dt>产品解读</dt><dd>若组合相对自身基准超配小盘，风格可能拖累超额，调仓成本还要看持仓股流动性。</dd></div>
+        <div><dt>向投研核实</dt><dd>本期相对自身基准的超额，市值暴露、基准内选股和滑点各贡献了多少？</dd></div>
+      </dl>
+    </article>
+    
+    <article class="strategy">
+      <h3>市场中性</h3>
+      <dl>
+        <div><dt>市场事实</dt><dd>当季年化基差为 IC2703（约 116 天）-11.16%、IM2703（约 116 天）-11.15%。</dd></div>
+        <div><dt>产品解读</dt><dd>贴水若收敛，新开或展期的空头可能受拖累，已有空头的期间损益还取决于基差如何变化。</dd></div>
+        <div><dt>向投研核实</dt><dd>实际用了哪些对冲合约，建仓基差是多少，下一次展期安排在什么时候？</dd></div>
+      </dl>
+    </article>
+    
+  </div>
+</section>
 <div class="grid">
 
 <section class="card" id="turnover" aria-labelledby="heading-turnover">
@@ -3869,6 +3929,35 @@ return Plotly;
 </section>
 
 </div>
+
+<details class="case">
+  <summary>历史压力案例 · 2024-02-05 小微盘走弱</summary>
+  <dl class="stats">
+  
+    <div><dt>全 A 当日成交额</dt><dd>8,863.28 亿元</dd></div>
+  
+    <div><dt>当日 20 日均值</dt><dd>7,506.55 亿元</dd></div>
+  
+    <div><dt>中证2000相对沪深300（近 5 日）</dt><dd>-19.44%</dd></div>
+  
+    <div><dt>申万一级行业离散度</dt><dd>2.36%</dd></div>
+  
+    <div><dt>上一交易日行业离散度</dt><dd>1.22%</dd></div>
+  
+    <div><dt>IC2406 年化基差</dt><dd>-18.29%</dd></div>
+  
+    <div><dt>IM2406 年化基差</dt><dd>-22.99%</dd></div>
+  
+  </dl>
+  <p class="notes">案例取 2024-02-05 当时可得的行情。分化指标使用申万 31 个一级行业指数作为个股离散度的替代口径。基差使用当天实际当季合约。</p>
+  <dl class="case-questions">
+    <dt>放量为什么还是难成交？</dt>
+    <dd>全市场成交额可以在集中卖出时上升。组合能否卖出，要看持仓股的买方深度、跌停封单和下单占比。</dd>
+    <dt>贴水加深对已有空头意味着什么？</dt>
+    <dd>如果期货相对现货进一步走弱，已有空头当期的期现相对损益可能受益。如果此时以更深贴水新开或展期，后续收敛则可能拖累收益。</dd>
+  </dl>
+</details>
+
 <section class="summary" aria-labelledby="summary">
   <h2 id="summary">本周小结</h2>
   <ul><li>交易活跃度处于近 1 年 7% 分位，近 5 日均额较前 5 日变动 -13.89%。</li><li>申万一级行业收益分化处于近 1 年 77% 分位，实际选股结果仍取决于信号和执行。</li><li>近 20 个交易日中证2000相对沪深300落后 10.12%，处于近 1 年 6% 分位，产品影响取决于相对基准的小盘暴露。</li><li>股指期货基差处于近 1 年 26% 分位，5–8 月除息可使贴水季节性加深，单凭贴水难以判断市场情绪。</li></ul>
@@ -3886,5 +3975,27 @@ return Plotly;
   <p class="disclaimer"><b>免责声明。</b> 本报告用于市场环境跟踪与交流，数据可能存在延迟或修订，指标仅描述统计特征。内容不构成投资建议或收益承诺。</p>
 </footer>
 </main>
+<script>
+document.querySelector("#copy-channel").addEventListener("click", async () => {
+  const field = document.querySelector("#channel-text");
+  const status = document.querySelector("#copy-status");
+  try {
+    await navigator.clipboard.writeText(field.value);
+    field.hidden = true;
+    status.textContent = "渠道摘要已复制。";
+    return;
+  } catch {
+    // 本地文件或受限制的浏览器仍可显示并选择全部纯文本。
+  }
+  field.hidden = false;
+  field.focus();
+  field.select();
+  field.setSelectionRange(0, field.value.length);
+  status.textContent = "已选中渠道摘要，可用系统的复制命令。";
+  if (document.execCommand("copy")) {
+    status.textContent = "渠道摘要已复制。";
+  }
+});
+</script>
 </body>
 </html>
